@@ -49,7 +49,7 @@ public class BoMClientEndpoint extends Endpoint {
             case LOGIN: {
                 if (context.getUser() == null) {
                     System.out.println("user login");
-                    context.setUser(message.getUser());
+                    context.userProperty().setValue(message.getUser());
                 }
             }
             case READ: {

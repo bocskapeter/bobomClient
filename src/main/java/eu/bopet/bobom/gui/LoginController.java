@@ -89,7 +89,6 @@ public class LoginController implements Initializable {
                 errorLabel.setTooltip(tooltip);
                 errorLabel.setText(labels.getString("errorDataBaseConnection"));
             }
-
             Users user = this.context.getUser();
             if (user == null) {
                 errorLabel.setTextFill(Color.RED);

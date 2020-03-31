@@ -6,6 +6,7 @@ import eu.bopet.bobom.core.entities.Items;
 import eu.bopet.bobom.core.entities.Users;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ObservableObjectValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.input.Clipboard;
@@ -17,11 +18,7 @@ import javax.websocket.ClientEndpointConfig;
 import javax.websocket.DeploymentException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -32,7 +29,7 @@ public class GUIContext {
     private final Map<Items, List<Boms>> boms;
     private final String eMail;
     private Clipboard clipboard;
-    private Users user;
+    private ObjectProperty<Users> user;
 
 
     public GUIContext(ResourceBundle labels, String eMail) {
@@ -64,11 +61,15 @@ public class GUIContext {
     }
 
     public Users getUser() {
+        return user.get();
+    }
+
+    public ObjectProperty<Users> userProperty() {
         return user;
     }
 
     public void setUser(Users user) {
-        this.user = user;
+        this.user.set(user);
     }
 
     public ResourceBundle getLabels() {
