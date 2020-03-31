@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<BorderPane xmlns:fx="http://javafx.com/fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+            AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx">
+    <top>
+        <BorderPane BorderPane.alignment="CENTER">
+            <left>
+                <Label fx:id="searchLabel" text="Search:" BorderPane.alignment="CENTER"/>
+            </left>
+            <center>
+                <TextField fx:id="filterField" BorderPane.alignment="CENTER"/>
+            </center>
+            <BorderPane.margin>
+                <Insets bottom="2.0" left="2.0" right="2.0" top="2.0"/>
+            </BorderPane.margin>
+        </BorderPane>
+    </top>
+    <center>
+        <SplitPane dividerPositions="0.5" orientation="VERTICAL" BorderPane.alignment="CENTER">
+            <TableView fx:id="itemsTable" BorderPane.alignment="CENTER">
+                <columns>
+                    <TableColumn fx:id="itemNumberColumn" editable="false" prefWidth="75.0" text="Item Number"/>
+                    <TableColumn fx:id="itemNameColumn" editable="false" prefWidth="75.0" text="Item Name"/>
+                    <TableColumn fx:id="revisionColumn" editable="false" prefWidth="75.0" text="Revision"/>
+                    <TableColumn fx:id="statusColumn" editable="false" prefWidth="75.0" text="Status"/>
+                    <TableColumn fx:id="descriptionColumn" editable="false" prefWidth="75.0" text="Description"/>
+                </columns>
+                <columnResizePolicy>
+                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                </columnResizePolicy>
+                <BorderPane.margin>
+                    <Insets bottom="2.0" left="2.0" right="2.0" top="2.0"/>
+                </BorderPane.margin>
+            </TableView>
+            <SplitPane dividerPositions="0.25" orientation="VERTICAL" BorderPane.alignment="CENTER">
+                <BorderPane BorderPane.alignment="CENTER">
+                    <top>
+                        <Label fx:id="materialLabel" text="Material" BorderPane.alignment="CENTER"/>
+                    </top>
+                    <center>
+                        <TableView fx:id="materialsTable" BorderPane.alignment="CENTER">
+                            <columns>
+                                <TableColumn fx:id="materialNameColumn" editable="false" prefWidth="75.0"/>
+                                <TableColumn fx:id="materialNumberColumn" editable="false" prefWidth="75.0"/>
+                                <TableColumn fx:id="materialDescriptionColumn" editable="false" prefWidth="75.0"/>
+                            </columns>
+                            <columnResizePolicy>
+                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                            </columnResizePolicy>
+                            <BorderPane.margin>
+                                <Insets bottom="2.0" left="2.0" right="2.0" top="2.0"/>
+                            </BorderPane.margin>
+                        </TableView>
+                    </center>
+                </BorderPane>
+                <SplitPane dividerPositions="0.25" orientation="VERTICAL" BorderPane.alignment="CENTER">
+                    <BorderPane BorderPane.alignment="CENTER">
+                        <top>
+                            <Label fx:id="standardLabel" text="Standard" BorderPane.alignment="CENTER"/>
+                        </top>
+                        <center>
+                            <TableView fx:id="standardTable" BorderPane.alignment="CENTER">
+                                <columns>
+                                    <TableColumn fx:id="standardNumberColumn" editable="false" prefWidth="75.0"
+                                                 text="Number"/>
+                                    <TableColumn fx:id="standardNameColumn" editable="false" prefWidth="75.0"
+                                                 text="Name"/>
+                                    <TableColumn fx:id="standardDescriptionColumn" editable="false" prefWidth="75.0"
+                                                 text="Description"/>
+                                </columns>
+                                <columnResizePolicy>
+                                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                                </columnResizePolicy>
+                                <BorderPane.margin>
+                                    <Insets bottom="2.0" left="2.0" right="2.0" top="2.0"/>
+                                </BorderPane.margin>
+                            </TableView>
+                        </center>
+                    </BorderPane>
+                    <SplitPane dividerPositions="0.5" orientation="VERTICAL" BorderPane.alignment="CENTER">
+                        <BorderPane BorderPane.alignment="CENTER">
+                            <top>
+                                <Label fx:id="categoryLabel" text="Category" BorderPane.alignment="CENTER"/>
+                            </top>
+                            <center>
+                                <TableView fx:id="categoryTable" BorderPane.alignment="CENTER">
+                                    <columns>
+                                        <TableColumn fx:id="categoryNameColumn" editable="false" prefWidth="75.0"
+                                                     text="Name"/>
+                                        <TableColumn fx:id="categoryGroupColumn" editable="false" prefWidth="75.0"
+                                                     text="Category Group"/>
+                                        <TableColumn fx:id="categoryDescriptionColumn" editable="false" prefWidth="75.0"
+                                                     text="Description"/>
+                                    </columns>
+                                    <columnResizePolicy>
+                                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                                    </columnResizePolicy>
+                                    <BorderPane.margin>
+                                        <Insets bottom="2.0" left="2.0" right="2.0" top="2.0"/>
+                                    </BorderPane.margin>
+                                </TableView>
+                            </center>
+                        </BorderPane>
+                        <BorderPane BorderPane.alignment="CENTER">
+                            <top>
+                                <Label fx:id="parameterLabel" text="Parameter" BorderPane.alignment="CENTER"/>
+                            </top>
+                            <center>
+                                <TableView fx:id="parameterTable" BorderPane.alignment="CENTER">
+                                    <columns>
+                                        <TableColumn fx:id="parameterCategoryColumn" editable="false" prefWidth="75.0"
+                                                     text="Category"/>
+                                        <TableColumn fx:id="parameterSeqColumn" editable="false" prefWidth="75.0"
+                                                     text="Position"/>
+                                        <TableColumn fx:id="parameterNameColumn" editable="false" prefWidth="75.0"
+                                                     text="Name"/>
+                                        <TableColumn fx:id="parameterValueColumn" editable="false" prefWidth="75.0"
+                                                     text="Value"/>
+                                        <TableColumn fx:id="parameterUnitColumn" editable="false" prefWidth="75.0"
+                                                     text="Unit"/>
+                                    </columns>
+                                    <columnResizePolicy>
+                                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                                    </columnResizePolicy>
+                                    <BorderPane.margin>
+                                        <Insets bottom="2.0" left="2.0" right="2.0" top="2.0"/>
+                                    </BorderPane.margin>
+                                </TableView>
+                            </center>
+                        </BorderPane>
+                    </SplitPane>
+                </SplitPane>
+            </SplitPane>
+        </SplitPane>
+    </center>
+</BorderPane>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<BorderPane xmlns:fx="http://javafx.com/fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+            AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx">
+    <center>
+        <GridPane hgap="10.0" vgap="10.0" BorderPane.alignment="CENTER">
+            <columnConstraints>
+                <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES"/>
+                <ColumnConstraints halignment="RIGHT" hgrow="ALWAYS"/>
+            </columnConstraints>
+            <Button fx:id="clearButton" mnemonicParsing="false" text="Clear fields" GridPane.halignment="CENTER"/>
+            <Button fx:id="deleteButton" mnemonicParsing="false" text="Delete" GridPane.columnIndex="1"
+                    GridPane.halignment="CENTER"/>
+            <Label fx:id="labelNameEn" alignment="CENTER_RIGHT" text="Name English: *" GridPane.rowIndex="1"/>
+            <Label fx:id="labelNameDe" alignment="CENTER_RIGHT" text="Name German: *" GridPane.rowIndex="2"/>
+            <Label fx:id="labelNameHu" alignment="CENTER_RIGHT" text="Name Hungarian: *" GridPane.rowIndex="3"/>
+            <TextField fx:id="textFieldNameEn" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+            <TextField fx:id="textFieldNameDe" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+            <TextField fx:id="textFieldNameHu" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+            <Button fx:id="modifyButton" mnemonicParsing="false" text="Save modifications"
+                    GridPane.halignment="CENTER" GridPane.rowIndex="5"/>
+            <Button fx:id="saveButton" mnemonicParsing="false" text="Save as new" GridPane.columnIndex="1"
+                    GridPane.halignment="CENTER" GridPane.rowIndex="5"/>
+            <Label fx:id="errorLabel" text=" " wrapText="true" GridPane.rowIndex="4" GridPane.columnSpan="2"/>
+            <BorderPane.margin>
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+            </BorderPane.margin>
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+            </padding>
+        </GridPane>
+    </center>
+    <top>
+        <VBox alignment="CENTER" BorderPane.alignment="CENTER">
+            <Label fx:id="titleLabel" alignment="CENTER" contentDisplay="CENTER" text="Name"
+                   textAlignment="CENTER">
+                <font>
+                    <Font size="28.0"/>
+                </font>
+            </Label>
+            <Label fx:id="secondTitleLabel" alignment="CENTER" contentDisplay="CENTER"
+                   text="Create new, modify existing or delete"
+                   textAlignment="CENTER"/>
+        </VBox>
+    </top>
+</BorderPane>

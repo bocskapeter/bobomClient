@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx" id="AnchorPane" minHeight="600.0"
+            minWidth="800.0" prefHeight="900.0" prefWidth="1200.0">
+    <MenuBar fx:id="menuBar" prefHeight="29.0" AnchorPane.leftAnchor="0.0"
+             AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <Menu fx:id="fileMenu" mnemonicParsing="false" text="File">
+            <MenuItem fx:id="closeMenuItem" mnemonicParsing="false" text="Close"/>
+        </Menu>
+        <Menu fx:id="userMenu" mnemonicParsing="false" text="User">
+            <MenuItem fx:id="userSettingsMenuItem" mnemonicParsing="false" text="Settings"/>
+            <MenuItem fx:id="newUserMenuItem" mnemonicParsing="false" text="New User"/>
+        </Menu>
+        <Menu fx:id="helpMenu" mnemonicParsing="false" text="Help">
+            <MenuItem fx:id="aboutMenuItem" mnemonicParsing="false" text="About"/>
+        </Menu>
+    </MenuBar>
+    <AnchorPane fx:id="mainPane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
+    </AnchorPane>
+</AnchorPane>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<BorderPane xmlns:fx="http://javafx.com/fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+            AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx">
+    <center>
+        <GridPane hgap="10.0" vgap="10.0" BorderPane.alignment="CENTER">
+            <columnConstraints>
+                <ColumnConstraints halignment="RIGHT" hgrow="ALWAYS"/>
+                <ColumnConstraints/>
+            </columnConstraints>
+            <Button fx:id="clearButton" mnemonicParsing="false" text="Clear field" GridPane.columnIndex="1"
+                    GridPane.halignment="CENTER"/>
+            <Label alignment="CENTER_RIGHT" text="BoM Number: *" GridPane.rowIndex="1"/>
+            <TextField fx:id="assemblyNumber" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS"
+                       GridPane.rowIndex="1"/>
+            <Label alignment="CENTER_RIGHT" text="BoM Name: *" GridPane.rowIndex="2"/>
+            <TextField fx:id="assemblyName" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2"/>
+            <TableView fx:id="componentsTable" BorderPane.alignment="CENTER" GridPane.columnSpan="2"
+                       GridPane.rowIndex="3" GridPane.vgrow="ALWAYS">
+                <columnResizePolicy>
+                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                </columnResizePolicy>
+                <BorderPane.margin>
+                    <Insets bottom="2.0" left="2.0" right="2.0" top="2.0"/>
+                </BorderPane.margin>
+            </TableView>
+            <Label fx:id="errorLabel" alignment="CENTER_RIGHT" text=" " wrapText="true" GridPane.columnSpan="2"
+                   GridPane.rowIndex="4"/>
+            <Button fx:id="saveButton" mnemonicParsing="false" text="Save" GridPane.columnIndex="1"
+                    GridPane.halignment="CENTER" GridPane.rowIndex="5"/>
+
+            <BorderPane.margin>
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+            </BorderPane.margin>
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+            </padding>
+        </GridPane>
+    </center>
+    <top>
+        <VBox alignment="CENTER" BorderPane.alignment="CENTER">
+            <Label fx:id="titleLabel" alignment="CENTER" contentDisplay="CENTER" text="BoM" textAlignment="CENTER">
+                <font>
+                    <Font size="28.0"/>
+                </font>
+            </Label>
+            <Label fx:id="secondTitleLabel" alignment="CENTER" contentDisplay="CENTER"
+                   text="Create new, modify existing or delete"
+                   textAlignment="CENTER"/>
+        </VBox>
+    </top>
+</BorderPane>

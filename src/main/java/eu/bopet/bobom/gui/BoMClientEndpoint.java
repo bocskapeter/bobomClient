@@ -16,39 +16,46 @@ import java.util.Base64;
 import java.util.logging.Logger;
 
 @ClientEndpoint
-public class GetUserClientEndpoint extends Endpoint {
+public class BoMClientEndpoint extends Endpoint {
     private Logger logger = Logger.getLogger(this.getClass().getName());
-    private Users user;
+    private Session session;
+    private GUIContext context;
 
-    public GetUserClientEndpoint() {
-        this.user = null;
+    public BoMClientEndpoint(GUIContext context) {
+        this.context = context;
     }
+
 
     @Override
     public void onOpen(Session session, EndpointConfig endpointConfig) {
-
-        session.addMessageHandler(new MessageHandler.Whole<String>() {
-
-            @Override
-            public void onMessage(String s) {
+        this.session = session;
+        session.addMessageHandler((MessageHandler.Whole<String>) s -> {
+            try {
                 Base64.Decoder decoder = Base64.getDecoder();
                 byte[] data = decoder.decode(s);
                 ByteArrayInputStream in = new ByteArrayInputStream(data);
-                ObjectInputStream is = null;
-                try {
-                    is = new ObjectInputStream(in);
-                    BoMMessage message = (BoMMessage) is.readObject();
-                    System.out.println(message.toString());
-                    if (user == null) {
-                        user = message.getUser();
-                    }
-                    System.out.println(user.toString());
-                } catch (IOException | ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
+                ObjectInputStream is = new ObjectInputStream(in);
+                BoMMessage message = (BoMMessage) is.readObject();
+                processMessage(message);
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
             }
         });
 
+    }
+
+    private void processMessage(BoMMessage message) {
+        switch (message.getActivity()) {
+            case LOGIN: {
+                if (context.getUser() == null) {
+                    System.out.println("user login");
+                    context.setUser(message.getUser());
+                }
+            }
+            case READ: {
+
+            }
+        }
     }
 
     @Override

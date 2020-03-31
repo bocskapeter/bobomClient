@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<BorderPane xmlns:fx="http://javafx.com/fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+            AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx">
+    <top>
+        <BorderPane BorderPane.alignment="CENTER">
+            <left>
+                <Label fx:id="searchLabel" text="Search:" BorderPane.alignment="CENTER"/>
+            </left>
+            <center>
+                <TextField fx:id="filterField" BorderPane.alignment="CENTER"/>
+            </center>
+            <BorderPane.margin>
+                <Insets bottom="2.0" left="2.0" right="2.0" top="2.0"/>
+            </BorderPane.margin>
+        </BorderPane>
+    </top>
+    <center>
+        <TableView fx:id="parameterTable" BorderPane.alignment="CENTER">
+            <columns>
+                <TableColumn fx:id="parameterNameColumn" editable="false" prefWidth="75.0" text="Name"/>
+                <TableColumn fx:id="parameterUnitColumn" editable="false" prefWidth="75.0" text="Unit"/>
+                <TableColumn fx:id="descriptionColumn" editable="false" prefWidth="75.0" text="Description"/>
+            </columns>
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+            </columnResizePolicy>
+            <BorderPane.margin>
+                <Insets bottom="2.0" left="2.0" right="2.0" top="2.0"/>
+            </BorderPane.margin>
+        </TableView>
+    </center>
+</BorderPane>
