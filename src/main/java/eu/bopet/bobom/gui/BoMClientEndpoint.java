@@ -10,15 +10,16 @@ import javax.websocket.EndpointConfig;
 import javax.websocket.MessageHandler;
 import javax.websocket.Session;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Base64;
 import java.util.logging.Logger;
 
 @ClientEndpoint
 public class BoMClientEndpoint extends Endpoint {
     private Logger logger = Logger.getLogger(this.getClass().getName());
-    private Session session;
     private GUIContext context;
 
     public BoMClientEndpoint(GUIContext context) {
@@ -28,7 +29,24 @@ public class BoMClientEndpoint extends Endpoint {
 
     @Override
     public void onOpen(Session session, EndpointConfig endpointConfig) {
-        this.session = session;
+        context.setSession(session);
+        logger.warning(session.toString());
+        session.addMessageHandler(new MessageHandler.Partial<String>() {
+            @Override
+            public void onMessage(String s, boolean b) {
+                try {
+                    Base64.Decoder decoder = Base64.getDecoder();
+                    byte[] data = decoder.decode(s);
+                    ByteArrayInputStream in = new ByteArrayInputStream(data);
+                    ObjectInputStream is = new ObjectInputStream(in);
+                    BoMMessage message = (BoMMessage) is.readObject();
+                    logger.info(message.toString());
+                    processMessage(message);
+                } catch (IOException | ClassNotFoundException e) {
+                    logger.warning(e.getLocalizedMessage());
+                }
+            }
+        });
         session.addMessageHandler((MessageHandler.Whole<String>) s -> {
             try {
                 Base64.Decoder decoder = Base64.getDecoder();
@@ -36,19 +54,31 @@ public class BoMClientEndpoint extends Endpoint {
                 ByteArrayInputStream in = new ByteArrayInputStream(data);
                 ObjectInputStream is = new ObjectInputStream(in);
                 BoMMessage message = (BoMMessage) is.readObject();
+                logger.info(message.toString());
                 processMessage(message);
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
         });
+    }
 
+    public void sendMessage(BoMMessage message){
+        try {
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+            objectOutputStream.writeObject(message);
+            Base64.Encoder encoder = Base64.getEncoder();
+            String toSend = encoder.encodeToString(byteArrayOutputStream.toByteArray());
+            context.getSession().getBasicRemote().sendText(toSend);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void processMessage(BoMMessage message) {
         switch (message.getActivity()) {
             case LOGIN: {
                 if (context.getUser() == null) {
-                    System.out.println("user login");
                     context.userProperty().setValue(message.getUser());
                 }
             }

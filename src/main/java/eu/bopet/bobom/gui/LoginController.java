@@ -1,24 +1,22 @@
 package eu.bopet.bobom.gui;
 
+import eu.bopet.bobom.core.BoMActivity;
+import eu.bopet.bobom.core.BoMMessage;
 import eu.bopet.bobom.core.entities.Users;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -81,40 +79,38 @@ public class LoginController implements Initializable {
     private void fireLogin() {
         if (validate()) {
             attemptLoginMessage();
-            try {
-                this.context = new GUIContext(labels,eMailTextField.getText());
-            } catch (Exception e) {
-                errorLabel.setTextFill(Color.RED);
-                Tooltip tooltip = new Tooltip(e.getLocalizedMessage());
-                errorLabel.setTooltip(tooltip);
-                errorLabel.setText(labels.getString("errorDataBaseConnection"));
-            }
-            Users user = this.context.getUser();
-            if (user == null) {
-                errorLabel.setTextFill(Color.RED);
-                errorLabel.setText(labels.getString("errorUnknownUser"));
-                clearFields();
-            } else {
-                errorLabel.setTextFill(Color.GREEN);
-                errorLabel.setText(labels.getString("checking"));
-                if (BCrypt.checkpw(passwordField.getText(), user.getPassword())) {
+            this.context = new GUIContext(labels, eMailTextField.getText());
+            BoMMessage message = new BoMMessage(BoMActivity.LOGIN,Users.class,null, Arrays.asList(context.getEMail()));
+            this.context.sendMessage(message);
+            this.context.userProperty().addListener((observable, oldValue, newValue) -> {
+                System.out.println("Changed, old value: " + oldValue);
+                System.out.println("and the new value: " + newValue);
+                if (newValue != null) {
+                    Users user = newValue;
                     errorLabel.setTextFill(Color.GREEN);
-                    errorLabel.setText(labels.getString("waitLoadingApp"));
-                    clearFields();
-                    showApp(stage, user);
+                    errorLabel.setText(labels.getString("checking"));
+                    if (BCrypt.checkpw(passwordField.getText(), user.getPassword())) {
+                        errorLabel.setTextFill(Color.GREEN);
+                        errorLabel.setText(labels.getString("waitLoadingApp"));
+                        clearFields();
+                        showApp(stage, user);
+                    } else {
+                        errorLabel.setTextFill(Color.RED);
+                        errorLabel.setText(labels.getString("errorWrongPassword"));
+                        passwordField.textProperty().set("");
+                        passwordField.requestFocus();
+                    }
                 } else {
                     errorLabel.setTextFill(Color.RED);
-                    errorLabel.setText(labels.getString("errorWrongPassword"));
-                    passwordField.textProperty().set("");
-                    passwordField.requestFocus();
+                    errorLabel.setText(labels.getString("errorUnknownUser"));
+                    clearFields();
                 }
-            }
+            });
         }
     }
 
     private void showApp(Stage stage, Users user) {
         try {
-            System.out.println("jooo");
         } catch (Exception e) {
             e.printStackTrace();
         }
