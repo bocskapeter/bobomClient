@@ -2,6 +2,7 @@ package eu.bopet.bobom.gui;
 
 import eu.bopet.bobom.core.BoMMessage;
 import eu.bopet.bobom.core.entities.Users;
+import javafx.application.Platform;
 
 import javax.websocket.ClientEndpoint;
 import javax.websocket.CloseReason;
@@ -34,32 +35,28 @@ public class BoMClientEndpoint extends Endpoint {
         session.addMessageHandler(new MessageHandler.Partial<String>() {
             @Override
             public void onMessage(String s, boolean b) {
-                try {
-                    Base64.Decoder decoder = Base64.getDecoder();
-                    byte[] data = decoder.decode(s);
-                    ByteArrayInputStream in = new ByteArrayInputStream(data);
-                    ObjectInputStream is = new ObjectInputStream(in);
-                    BoMMessage message = (BoMMessage) is.readObject();
-                    logger.info(message.toString());
-                    processMessage(message);
-                } catch (IOException | ClassNotFoundException e) {
-                    logger.warning(e.getLocalizedMessage());
-                }
+                decodeMessage(s);
             }
         });
         session.addMessageHandler((MessageHandler.Whole<String>) s -> {
-            try {
-                Base64.Decoder decoder = Base64.getDecoder();
-                byte[] data = decoder.decode(s);
-                ByteArrayInputStream in = new ByteArrayInputStream(data);
-                ObjectInputStream is = new ObjectInputStream(in);
-                BoMMessage message = (BoMMessage) is.readObject();
-                logger.info(message.toString());
-                processMessage(message);
-            } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
-            }
+            decodeMessage(s);
         });
+    }
+
+    private void decodeMessage(String s) {
+        try {
+            Base64.Decoder decoder = Base64.getDecoder();
+            byte[] data = decoder.decode(s);
+            ByteArrayInputStream in = new ByteArrayInputStream(data);
+            ObjectInputStream is = new ObjectInputStream(in);
+            BoMMessage message = (BoMMessage) is.readObject();
+            logger.info(message.toString());
+            Platform.runLater(() -> {
+                processMessage(message);
+            });
+        } catch (IOException | ClassNotFoundException e) {
+            logger.warning(e.getLocalizedMessage());
+        }
     }
 
     public void sendMessage(BoMMessage message){

@@ -80,8 +80,6 @@ public class LoginController implements Initializable {
         if (validate()) {
             attemptLoginMessage();
             this.context = new GUIContext(labels, eMailTextField.getText());
-            BoMMessage message = new BoMMessage(BoMActivity.LOGIN,Users.class,null, Arrays.asList(context.getEMail()));
-            this.context.sendMessage(message);
             this.context.userProperty().addListener((observable, oldValue, newValue) -> {
                 System.out.println("Changed, old value: " + oldValue);
                 System.out.println("and the new value: " + newValue);
@@ -106,6 +104,8 @@ public class LoginController implements Initializable {
                     clearFields();
                 }
             });
+            BoMMessage message = new BoMMessage(BoMActivity.LOGIN,Users.class,null, Arrays.asList(context.getEMail()));
+            this.context.sendMessage(message);
         }
     }
 
