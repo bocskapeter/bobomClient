@@ -3,6 +3,7 @@ package eu.bopet.bobom.gui;
 import eu.bopet.bobom.core.BoMActivity;
 import eu.bopet.bobom.core.BoMMessage;
 import eu.bopet.bobom.core.entities.Users;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -72,40 +73,41 @@ public class LoginController implements Initializable {
                 fireLogin();
             }
         });
+        this.context = new GUIContext(labels);
+
         loginButton.setOnKeyPressed(event -> fireLogin());
         loginButton.setOnAction(event -> fireLogin());
+
+        this.context.userProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                Users user = newValue;
+                errorLabel.setTextFill(Color.GREEN);
+                errorLabel.setText(labels.getString("checking"));
+                if (BCrypt.checkpw(passwordField.getText(), user.getPassword())) {
+                    errorLabel.setTextFill(Color.GREEN);
+                    errorLabel.setText(labels.getString("waitLoadingApp"));
+                    clearFields();
+                    showApp(stage, user);
+                } else {
+                    errorLabel.setTextFill(Color.RED);
+                    errorLabel.setText(labels.getString("errorWrongPassword"));
+                    passwordField.textProperty().set("");
+                    passwordField.requestFocus();
+                }
+            } else {
+                errorLabel.setTextFill(Color.RED);
+                errorLabel.setText(labels.getString("errorUnknownUser"));
+                clearFields();
+            }
+        });
     }
 
     private void fireLogin() {
         if (validate()) {
             attemptLoginMessage();
-            this.context = new GUIContext(labels, eMailTextField.getText());
-            this.context.userProperty().addListener((observable, oldValue, newValue) -> {
-                System.out.println("Changed, old value: " + oldValue);
-                System.out.println("and the new value: " + newValue);
-                if (newValue != null) {
-                    Users user = newValue;
-                    errorLabel.setTextFill(Color.GREEN);
-                    errorLabel.setText(labels.getString("checking"));
-                    if (BCrypt.checkpw(passwordField.getText(), user.getPassword())) {
-                        errorLabel.setTextFill(Color.GREEN);
-                        errorLabel.setText(labels.getString("waitLoadingApp"));
-                        clearFields();
-                        showApp(stage, user);
-                    } else {
-                        errorLabel.setTextFill(Color.RED);
-                        errorLabel.setText(labels.getString("errorWrongPassword"));
-                        passwordField.textProperty().set("");
-                        passwordField.requestFocus();
-                    }
-                } else {
-                    errorLabel.setTextFill(Color.RED);
-                    errorLabel.setText(labels.getString("errorUnknownUser"));
-                    clearFields();
-                }
-            });
-            BoMMessage message = new BoMMessage(BoMActivity.LOGIN,Users.class,null, Arrays.asList(context.getEMail()));
-            this.context.sendMessage(message);
+            String eMail = eMailTextField.getText();
+            BoMMessage message = new BoMMessage(BoMActivity.LOGIN,Users.class,null, Arrays.asList(eMail));
+            Platform.runLater(() -> this.context.sendMessage(message));
         }
     }
 

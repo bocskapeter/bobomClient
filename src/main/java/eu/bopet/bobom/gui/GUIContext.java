@@ -21,8 +21,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 public class GUIContext {
@@ -31,16 +29,13 @@ public class GUIContext {
     private final Map<Class<?>, ObjectProperty<DBEntities>> selectedPropertyMap;
     private final Map<Class<?>, ObservableList<DBEntities>> entityListMap;
     private final Map<Items, List<Boms>> boms;
-    private final String eMail;
     private Clipboard clipboard;
     private ObjectProperty<Users> user;
-    private Session session;
     BoMClientEndpoint clientEndpoint;
 
 
-    public GUIContext(ResourceBundle labels, String eMail) {
+    public GUIContext(ResourceBundle labels) {
         this.labels = labels;
-        this.eMail = eMail;
         this.selectedPropertyMap = new HashMap<>();
         this.entityListMap = new HashMap<>();
         this.boms = new HashMap<>();
@@ -52,9 +47,9 @@ public class GUIContext {
         final ClientEndpointConfig cec = ClientEndpointConfig.Builder.create().build();
         ClientManager client = ClientManager.createClient();
         try {
-            URI serverHost = new URI("ws://localhost:8080/bobomServer-1.0-SNAPSHOT/engineering/" + eMail);
+            URI serverHost = new URI("ws://localhost:8080/bobomServer-1.0-SNAPSHOT/engineering");
             clientEndpoint = new BoMClientEndpoint(this);
-            session = client.connectToServer(clientEndpoint, cec, serverHost);
+            client.connectToServer(clientEndpoint, cec, serverHost);
         } catch (URISyntaxException | DeploymentException | IOException e) {
             e.printStackTrace();
             logger.warning(e.getLocalizedMessage());
@@ -75,18 +70,6 @@ public class GUIContext {
 
     public void setUser(Users user) {
         this.user.set(user);
-    }
-
-    public Session getSession() {
-        return session;
-    }
-
-    public void setSession(Session session) {
-        this.session = session;
-    }
-
-    public String getEMail() {
-        return eMail;
     }
 
     public ResourceBundle getLabels() {
