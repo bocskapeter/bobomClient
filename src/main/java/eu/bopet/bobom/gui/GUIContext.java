@@ -5,6 +5,7 @@ import eu.bopet.bobom.core.entities.Boms;
 import eu.bopet.bobom.core.entities.DBEntities;
 import eu.bopet.bobom.core.entities.Items;
 import eu.bopet.bobom.core.entities.Users;
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -21,6 +22,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
+import java.util.concurrent.CountDownLatch;
 import java.util.logging.Logger;
 
 public class GUIContext {
@@ -40,16 +42,15 @@ public class GUIContext {
         this.entityListMap = new HashMap<>();
         this.boms = new HashMap<>();
         this.user = new SimpleObjectProperty<>();
-        clientConnection();
+        Platform.runLater(() -> clientConnection());
     }
 
     private void clientConnection() {
-        final ClientEndpointConfig cec = ClientEndpointConfig.Builder.create().build();
         ClientManager client = ClientManager.createClient();
         try {
             URI serverHost = new URI("ws://localhost:8080/bobomServer-1.0-SNAPSHOT/engineering");
             clientEndpoint = new BoMClientEndpoint(this);
-            client.connectToServer(clientEndpoint, cec, serverHost);
+            client.connectToServer(clientEndpoint, serverHost);
         } catch (URISyntaxException | DeploymentException | IOException e) {
             e.printStackTrace();
             logger.warning(e.getLocalizedMessage());

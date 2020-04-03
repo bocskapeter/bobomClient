@@ -1,25 +1,24 @@
 package eu.bopet.bobom.gui;
 
 import eu.bopet.bobom.core.BoMMessage;
-import eu.bopet.bobom.core.entities.Users;
 import javafx.application.Platform;
 
 import javax.websocket.ClientEndpoint;
 import javax.websocket.CloseReason;
-import javax.websocket.Endpoint;
+import javax.websocket.EncodeException;
 import javax.websocket.EndpointConfig;
-import javax.websocket.MessageHandler;
+import javax.websocket.OnClose;
+import javax.websocket.OnError;
+import javax.websocket.OnMessage;
+import javax.websocket.OnOpen;
 import javax.websocket.Session;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.util.Base64;
 import java.util.logging.Logger;
 
-@ClientEndpoint
-public class BoMClientEndpoint extends Endpoint {
+@ClientEndpoint(
+        encoders = MessageEncoder.class,
+        decoders = MessageDecoder.class)
+public class BoMClientEndpoint {
     private Logger logger = Logger.getLogger(this.getClass().getName());
     private GUIContext context;
     private Session session;
@@ -29,41 +28,21 @@ public class BoMClientEndpoint extends Endpoint {
     }
 
 
-    @Override
+    @OnOpen
     public void onOpen(Session session, EndpointConfig endpointConfig) {
         logger.warning(session.toString());
-        session.addMessageHandler((MessageHandler.Whole<String>) s -> {decodeMessage(s);});
         this.session = session;
     }
 
-    private void decodeMessage(String s) {
-        try {
-            Base64.Decoder decoder = Base64.getDecoder();
-            byte[] data = decoder.decode(s);
-            ByteArrayInputStream in = new ByteArrayInputStream(data);
-            ObjectInputStream is = new ObjectInputStream(in);
-            BoMMessage message = (BoMMessage) is.readObject();
-            processMessage(message);
-        } catch (IOException | ClassNotFoundException e) {
-            logger.warning("Incoming String: " + s);
-            logger.warning(e.getLocalizedMessage());
-        }
+    @OnMessage
+    public void onMessage(BoMMessage message) {
+        Platform.runLater(() -> processMessage(message));
     }
 
-    public void sendMessage(BoMMessage message){
-        encodeMessage(message);
-    }
-
-    private void encodeMessage(BoMMessage message) {
+    public void sendMessage(BoMMessage message) {
         try {
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
-            objectOutputStream.writeObject(message);
-            Base64.Encoder encoder = Base64.getEncoder();
-            String result = encoder.encodeToString(byteArrayOutputStream.toByteArray());
-            System.out.println(session);
-            session.getBasicRemote().sendText(result);
-        } catch (IOException e) {
+            session.getBasicRemote().sendObject(message);
+        } catch (IOException | EncodeException e) {
             logger.warning(message.toString());
             logger.warning(e.getLocalizedMessage());
         }
@@ -82,13 +61,13 @@ public class BoMClientEndpoint extends Endpoint {
         }
     }
 
-    @Override
+    @OnClose
     public void onClose(Session session, CloseReason closeReason) {
-        super.onClose(session, closeReason);
+        logger.info(String.format("Session %s closed because of %s", session.getId(), closeReason));
     }
 
-    @Override
-    public void onError(Session session, Throwable thr) {
-        super.onError(session, thr);
+    @OnError
+    public void onError(Session session, Throwable error) {
+        logger.warning(String.format("Session %s error: %s", session.getId(), error.getMessage()));
     }
 }

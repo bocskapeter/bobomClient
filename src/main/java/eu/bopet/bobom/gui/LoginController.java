@@ -112,6 +112,7 @@ public class LoginController implements Initializable {
     }
 
     private void showApp(Stage stage, Users user) {
+        System.out.println("Here comes the Engineering App");
         try {
         } catch (Exception e) {
             e.printStackTrace();
