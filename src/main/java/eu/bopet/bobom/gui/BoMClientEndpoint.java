@@ -51,7 +51,7 @@ public class BoMClientEndpoint {
     private void processMessage(BoMMessage message) {
         switch (message.getActivity()) {
             case LOGIN: {
-                if (context.getUser() == null) {
+                if (message.getUser() != null) {
                     context.userProperty().setValue(message.getUser());
                 }
             }

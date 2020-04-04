@@ -31,6 +31,7 @@ public class GUIContext {
     private final Map<Class<?>, ObjectProperty<DBEntities>> selectedPropertyMap;
     private final Map<Class<?>, ObservableList<DBEntities>> entityListMap;
     private final Map<Items, List<Boms>> boms;
+    private boolean isConnected;
     private Clipboard clipboard;
     private ObjectProperty<Users> user;
     BoMClientEndpoint clientEndpoint;
@@ -48,17 +49,18 @@ public class GUIContext {
     private void clientConnection() {
         ClientManager client = ClientManager.createClient();
         try {
-            URI serverHost = new URI("ws://localhost:8080/bobomServer-1.0-SNAPSHOT/engineering");
+            URI serverHost = new URI("ws://localhost:8080/bobomServer/engineering");
             clientEndpoint = new BoMClientEndpoint(this);
             client.connectToServer(clientEndpoint, serverHost);
+            isConnected = true;
         } catch (URISyntaxException | DeploymentException | IOException e) {
-            e.printStackTrace();
             logger.warning(e.getLocalizedMessage());
+            isConnected = false;
         }
     }
 
     public void sendMessage(BoMMessage message){
-        clientEndpoint.sendMessage(message);
+        Platform.runLater(() -> clientEndpoint.sendMessage(message));
     }
 
     public Users getUser() {
@@ -71,6 +73,10 @@ public class GUIContext {
 
     public void setUser(Users user) {
         this.user.set(user);
+    }
+
+    public boolean isConnected() {
+        return isConnected;
     }
 
     public ResourceBundle getLabels() {

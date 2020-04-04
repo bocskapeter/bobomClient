@@ -83,17 +83,7 @@ public class LoginController implements Initializable {
                 Users user = newValue;
                 errorLabel.setTextFill(Color.GREEN);
                 errorLabel.setText(labels.getString("checking"));
-                if (BCrypt.checkpw(passwordField.getText(), user.getPassword())) {
-                    errorLabel.setTextFill(Color.GREEN);
-                    errorLabel.setText(labels.getString("waitLoadingApp"));
-                    clearFields();
-                    showApp(stage, user);
-                } else {
-                    errorLabel.setTextFill(Color.RED);
-                    errorLabel.setText(labels.getString("errorWrongPassword"));
-                    passwordField.textProperty().set("");
-                    passwordField.requestFocus();
-                }
+                if (checkPwd(passwordField.getText(), user.getPassword()))showApp(stage, user);
             } else {
                 errorLabel.setTextFill(Color.RED);
                 errorLabel.setText(labels.getString("errorUnknownUser"));
@@ -103,11 +93,34 @@ public class LoginController implements Initializable {
     }
 
     private void fireLogin() {
-        if (validate()) {
-            attemptLoginMessage();
-            String eMail = eMailTextField.getText();
-            BoMMessage message = new BoMMessage(BoMActivity.LOGIN,Users.class,null, Arrays.asList(eMail));
-            Platform.runLater(() -> this.context.sendMessage(message));
+        if(context.isConnected()){
+            if (validate()) {
+                attemptLoginMessage();
+                String eMail = eMailTextField.getText();
+                if (this.context.getUser()!=null && this.context.getUser().getEMail().equals(eMail)){
+                    Users user = context.getUser();
+                    if (checkPwd(passwordField.getText(), user.getPassword()))showApp(stage, user);
+                } else {
+                    BoMMessage message = new BoMMessage(BoMActivity.LOGIN,Users.class,null, Arrays.asList(eMail));
+                    this.context.sendMessage(message);
+                }
+            }
+        }
+
+    }
+
+    private boolean checkPwd(String field, String pwd){
+        if (BCrypt.checkpw(field, pwd)) {
+            errorLabel.setTextFill(Color.GREEN);
+            errorLabel.setText(labels.getString("waitLoadingApp"));
+            clearFields();
+            return true;
+        } else {
+            errorLabel.setTextFill(Color.RED);
+            errorLabel.setText(labels.getString("errorWrongPassword"));
+            passwordField.textProperty().set("");
+            passwordField.requestFocus();
+            return false;
         }
     }
 
