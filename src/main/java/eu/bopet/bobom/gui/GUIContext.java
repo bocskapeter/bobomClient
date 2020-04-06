@@ -1,10 +1,8 @@
 package eu.bopet.bobom.gui;
 
+import eu.bopet.bobom.core.BoMActivity;
 import eu.bopet.bobom.core.BoMMessage;
-import eu.bopet.bobom.core.entities.Boms;
-import eu.bopet.bobom.core.entities.DBEntities;
-import eu.bopet.bobom.core.entities.Items;
-import eu.bopet.bobom.core.entities.Users;
+import eu.bopet.bobom.core.entities.*;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -15,14 +13,11 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DataFormat;
 import org.glassfish.tyrus.client.ClientManager;
 
-import javax.websocket.ClientEndpointConfig;
 import javax.websocket.DeploymentException;
-import javax.websocket.Session;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
-import java.util.concurrent.CountDownLatch;
 import java.util.logging.Logger;
 
 public class GUIContext {
@@ -104,6 +99,14 @@ public class GUIContext {
         this.entityListMap.put(entityClass, FXCollections.observableArrayList(listOfAllData));
     }
 
+    public void putIntoEntityList(Class<?> entityClass, List<DBEntities> entities) {
+        for (DBEntities entity : entities) {
+            if (!entityListMap.get(entityClass).contains(entity)) {
+                this.entityListMap.get(entityClass).add(entity);
+            }
+        }
+    }
+
     public void select(Class<?> selectedClass, DBEntities entity) {
         this.selectedPropertyMap.get(selectedClass).setValue(entity);
     }
@@ -112,4 +115,72 @@ public class GUIContext {
         return this.selectedPropertyMap.get(selectedClass);
     }
 
+    public void loadAllData(Class<DBEntities> entityClass) {
+        BoMMessage message = new BoMMessage(BoMActivity.READ_ALL, entityClass, user.get(), null);
+        sendMessage(message);
+    }
+
+    public Users saveNew(Users user) {
+        //TODO
+        return null;
+    }
+
+    public String getLanguage() {
+        return user.get().getLocale().getLanguage();
+    }
+
+    public List<Boms> getBom(Items newSelection) {
+        //TODO
+        return null;
+    }
+
+    public Object getEntityByUID(Class<Units> unitsClass, String s) {
+        //TODO
+        return null;
+    }
+
+    public List<CategoryParameters> getCategoryParameters(Categories category) {
+        //TODO
+        return null;
+    }
+
+    public boolean deleteEntity(DBEntities entity) {
+        //TODO
+        return true;
+    }
+
+    public List<Boms> saveNewBom(ObservableList<Boms> bomData) {
+        //TODO
+        return null;
+    }
+
+    public DBEntities saveNewEntity(Object[] fields, Class<DBEntities> entityClass) {
+        //TODO
+        return null;
+    }
+
+    public boolean modifyEntity(DBEntities currentEntity, Object[] fields) {
+        //TODO
+        return false;
+    }
+
+    public List<ItemStandards> getItemStandards(Items item) {
+        //TODO
+        return null;
+    }
+
+    public List<DBEntities> saveList(List<ItemStandards> collect) {
+        //TODO
+        return null;
+    }
+
+    public List<ItemCategories> getItemCategories(Items item) {
+        //TODO
+        return null;
+    }
+
+    public List<ParameterValues> getItemParameters(ItemCategories itemCategory) {
+        //TODO
+        return null;
+    }
 }

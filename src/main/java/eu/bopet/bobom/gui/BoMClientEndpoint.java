@@ -3,15 +3,7 @@ package eu.bopet.bobom.gui;
 import eu.bopet.bobom.core.BoMMessage;
 import javafx.application.Platform;
 
-import javax.websocket.ClientEndpoint;
-import javax.websocket.CloseReason;
-import javax.websocket.EncodeException;
-import javax.websocket.EndpointConfig;
-import javax.websocket.OnClose;
-import javax.websocket.OnError;
-import javax.websocket.OnMessage;
-import javax.websocket.OnOpen;
-import javax.websocket.Session;
+import javax.websocket.*;
 import java.io.IOException;
 import java.util.logging.Logger;
 
@@ -53,10 +45,12 @@ public class BoMClientEndpoint {
             case LOGIN: {
                 if (message.getUser() != null) {
                     context.userProperty().setValue(message.getUser());
+                    break;
                 }
             }
-            case READ: {
-
+            case READ_ALL: {
+                context.putIntoEntityList(message.getTheClass(), message.getList());
+                break;
             }
         }
     }

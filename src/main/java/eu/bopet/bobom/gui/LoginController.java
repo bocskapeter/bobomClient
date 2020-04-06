@@ -3,14 +3,14 @@ package eu.bopet.bobom.gui;
 import eu.bopet.bobom.core.BoMActivity;
 import eu.bopet.bobom.core.BoMMessage;
 import eu.bopet.bobom.core.entities.Users;
-import javafx.application.Platform;
+import eu.bopet.bobom.gui.controllers.MainStageController;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -125,8 +125,20 @@ public class LoginController implements Initializable {
     }
 
     private void showApp(Stage stage, Users user) {
-        System.out.println("Here comes the Engineering App");
         try {
+            labels = ResourceBundle.getBundle("text/LabelsBundle", user.getLocale(), new UTF8Control());
+            MainStageController mainStageController = new MainStageController(context);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MainScene.fxml"));
+            loader.setController(mainStageController);
+            Parent root = loader.load();
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add("/styles/Styles.css");
+            stage.setTitle("BoBoM");
+            stage.getIcons().add(new Image("/images/bobom.png"));
+            stage.setX(10);
+            stage.setY(10);
+            stage.setScene(scene);
+            stage.show();
         } catch (Exception e) {
             e.printStackTrace();
         }
